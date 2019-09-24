@@ -39,7 +39,3 @@ If you find you upload and the board starts cycling every few seconds just power
 the sketch to the ESP8266 the VL53L0X gets into an error state and it needs to be cycled.  The reset button won't help
 here, you need to remove the power for a second.  It sometimes happens after uploading the sketch.
 
-Sketch code below, just cut and paste it to use it.  Make sure you have the various libraries installed.  When I get a 
-minute I'll add links here.
-
-As with the example code I used to make this, I left in the ablity to turn the LED on by sending it a message beginning with "1".  It's a nice way to test the connection without having to have a serial monitor connected.
