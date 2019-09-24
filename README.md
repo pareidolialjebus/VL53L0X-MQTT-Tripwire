@@ -14,16 +14,16 @@ lasers has the additional benefit of being able to report a direction of travel 
 
 ## To do
 
-Add circuit diagram for dual version (it's literally another unit on the i2c bus and direct connections to the reset
+- Add circuit diagram for dual version (it's literally another unit on the i2c bus and direct connections to the reset
 pins on the laser module that allow them to be programmed with i2c assresses.  Id's on these chips are volatile and
 lost with every reboot.
 
 ## Future versions
 
-The next version of the sketch / circuit(s) will support calibration hardware that will allow users to interactively
+- The next version of the sketch / circuit(s) will support calibration hardware that will allow users to interactively
 set the distance to monitor to allow for specific distance ranges (such as the 100 millimeters covering a letterbox).
 
-Calibration to be saved to flash to allow reboot.  Calibration to be set by MQTT message if enabled at compile time.
+- Calibration to be saved to flash to allow reboot.  Calibration to be set by MQTT message if enabled at compile time.
 
 ## Issues
 
@@ -39,3 +39,11 @@ If you find you upload and the board starts cycling every few seconds just power
 the sketch to the ESP8266 the VL53L0X gets into an error state and it needs to be cycled.  The reset button won't help
 here, you need to remove the power for a second.  It sometimes happens after uploading the sketch.
 
+### Further information
+
+There's a lot of information about these out there, but these two video's are excellent introductions.
+https://www.youtube.com/watch?v=gGtD93wb7xI - Shows the beam spread filmed with an infrared camera.
+https://www.youtube.com/watch?v=v8BYS-LokaE - Anreas Speiss (The guy with the Swiss Accent!)
+
+You can buy these everywhere for a few dollars if you can wait for the post from China.  Adafruit board is nice
+and probably will arrive quicker.  I'm generally broke so these all developed with the cheapo boards.
