@@ -25,19 +25,9 @@
 #include <PubSubClient.h>
 #include "Adafruit_VL53L0X.h"
 
+#include "secrets.h" // <------- dont forget to update the secrets file!
+
 Adafruit_VL53L0X lox = Adafruit_VL53L0X();
-
-// Update these with values suitable for your wifi network.
-const char* ssid = "your_router";
-const char* password = "your_wifi_password";
-
-// Update these with values suitable for your mqtt broker.
-const char* mqtt_server = "your.mqtt.server.address";
-String mqtt_user = "yourmqttuser"; // <------- add your MQTT details
-String mqtt_pass = "yourmqttpass"; // <------- add your MQTT details
-const char* mqtt_topic = "outTopic"; // <------- add your MQTT details
-String clientId = "whateveryoulike"; // <------- add a client ID
-String mqtt_in = "inTopic"; // <------ the topic to listen to if you need callback
 
 int somethingNew = 0;
 int endvalSent = 0;
