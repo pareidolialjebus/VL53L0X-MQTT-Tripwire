@@ -1,18 +1,16 @@
+// V0.3
 // Dual VL53L0x Time of Flight Laser Rangefinders as directional tripwire
 // Reports "on1" and "on2" as MQTT payload when beams broken by a person
 // or objects travelling as long as they break both beams sequentially.
 //
-// This sketch is created using example code mashed together by a non-expert
-// who liked the idea of adding laser tripwires to thier home assistant install.
+// Although not strictly necessary, have left in callback function in as it could
+// be useful for future version of this sketch.
 //
-// PareidolialJebus (2019)
+// PareidolialJebus (2019) - "Jee Bus"
 // pareidolialjebus at protonmail.com
-// (Just call me Jee Bus)
-//
-// --------------------------------------------------------------------------------
-// Credits
-// This sketch is a heavily modified version of example file supplied with the 
-// Adafruit Library found here: https://github.com/adafruit/Adafruit_VL53L0X
+// 
+// Sketch heavily modified version of example file supplied with the the Adafruit
+// Library found here: https://github.com/adafruit/Adafruit_VL53L0X
 //
 // MQTT implemented using the PubSubClient library and example code by 
 // Nick O'Leary found here: https://github.com/knolleary/pubsubclient
@@ -34,20 +32,6 @@ Adafruit_VL53L0X lox1 = Adafruit_VL53L0X();
 Adafruit_VL53L0X lox2 = Adafruit_VL53L0X();
 VL53L0X_RangingMeasurementData_t measure1;
 VL53L0X_RangingMeasurementData_t measure2;
-
-// WiFi
-// --------------------------------------------------------------------------------
-const char* ssid = "your_ssid";  // <------- add your Wi Fi details
-const char* password = "your_pass"; // <------- add your Wi Fi details
-
-// MQTT
-// --------------------------------------------------------------------------------
-const char* mqtt_server = "your.mqtt.broker"; // <------- add your MQTT details
-String mqtt_user = "yourmqttuser"; // <------- add your MQTT details
-String mqtt_pass = "yourmqttpass"; // <------- add your MQTT details
-const char* mqtt_topic = "outTopic"; // <------- add your MQTT details
-String clientId = "whateveryoulike"; // <------- add a client ID
-String mqtt_in = "inTopic"; // <------ the topic to listen to if you need callback
 
 WiFiClient espClient;
 PubSubClient client(espClient);
