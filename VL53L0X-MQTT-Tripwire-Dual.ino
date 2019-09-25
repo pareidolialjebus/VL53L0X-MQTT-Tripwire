@@ -22,6 +22,8 @@
 #include <ESP8266WiFi.h>
 #include <PubSubClient.h>
 
+#include "secrets.h" // <------- dont forget to update the secrets file!
+
 // L0x1 L0x2 definitions
 // --------------------------------------------------------------------------------
 #define LOX1_ADDRESS 0x31
