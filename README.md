@@ -47,3 +47,10 @@ https://www.youtube.com/watch?v=v8BYS-LokaE - Anreas Speiss (The guy with the Sw
 
 You can buy these everywhere for a few dollars if you can wait for the post from China.  Adafruit board is nice
 and probably will arrive quicker.  I'm generally broke so these all developed with the cheapo boards.
+
+### Changelog
+
+0.4 Update to secrets.h to move port from main sketch
+0.3 Moved secrets out of sketch (mqtt user / password etc)
+0.2 Removed legacy led on/off from original example sketch 
+0.1 First upload
