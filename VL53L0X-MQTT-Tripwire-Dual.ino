@@ -1,4 +1,4 @@
-// V0.3
+// V0.4
 // Dual VL53L0x Time of Flight Laser Rangefinders as directional tripwire
 // Reports "on1" and "on2" as MQTT payload when beams broken by a person
 // or objects travelling as long as they break both beams sequentially.
@@ -8,11 +8,11 @@
 //
 // PareidolialJebus (2019) - "Jee Bus"
 // pareidolialjebus at protonmail.com
-// 
+//
 // Sketch heavily modified version of example file supplied with the the Adafruit
 // Library found here: https://github.com/adafruit/Adafruit_VL53L0X
 //
-// MQTT implemented using the PubSubClient library and example code by 
+// MQTT implemented using the PubSubClient library and example code by
 // Nick O'Leary found here: https://github.com/knolleary/pubsubclient
 // --------------------------------------------------------------------------------
 
@@ -72,7 +72,7 @@ void setID() {
     while (1);
   }
   delay(10);
-  
+
   // activate L0x2
   digitalWrite(SHT_LOX2, HIGH);
   delay(10);
@@ -80,7 +80,7 @@ void setID() {
     Serial.println(F("L0x2 failed to boot"));
     while (1);
   }
-  
+
 }
 
 // read L0x1 L0x2 and decide if triggered / direction
@@ -158,15 +158,11 @@ void setup_wifi() {
     Serial.print(".");
   }
 
-  randomSeed(micros());
-
-  Serial.println("");
-  Serial.println("WiFi connected");
-  Serial.println("IP address: ");
+  Serial.println("WiFi connected, IP address: ");
   Serial.println(WiFi.localIP());
 }
 
-// recieve MQTT message from broker 
+// recieve MQTT message from broker
 // --------------------------------------------------------------------------------
 void callback(char* topic, byte* payload, unsigned int length) {
   Serial.print("Message arrived [");
@@ -179,7 +175,7 @@ void callback(char* topic, byte* payload, unsigned int length) {
 
 }
 
-// connect / reconnect MQTT broker 
+// connect / reconnect MQTT broker
 // --------------------------------------------------------------------------------
 void reconnect() {
   // Loop until we're reconnected
@@ -209,8 +205,14 @@ void setup() {
 
   // start wifi
   setup_wifi();
-  client.setServer(mqtt_server, 1883);
+
+  // start MQTT outgoing
+  Serial.println("Starting MQTT out");
+  client.setServer(mqtt_server, mqtt_port); 
+  // start MQTT incoming
+  Serial.println("Starting MQTT in");
   client.setCallback(callback);
+  Serial.println("MQTT running");
 
   // start lasers
   pinMode(SHT_LOX1, OUTPUT);
