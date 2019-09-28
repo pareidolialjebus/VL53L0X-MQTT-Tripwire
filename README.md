@@ -1,7 +1,18 @@
-# VL53L0X-MQTT-Tripwire
+# VL53L0X-MQTT-Tripwire V0.5
 Arduino sketches used to create a single or dual tripwire for use with IoT software
 
-##  MQTT Broker
+## Dependancies
+
+### Arduino IDE
+For this project I've used the arduino IDE and installed ESP8266 boards.
+
+### Libraries
+Adafruit L53L0x Library found here: https://github.com/adafruit/Adafruit_VL53L0X and the
+PubSubClient library by Nick O'Leary found here: https://github.com/knolleary/pubsubclient.
+
+They handle the heavy lifting with the laser chip and MQTT respectively.
+
+### MQTT Broker
 
 You must have an MQTT broker and a working arduino environment capable of compiling and programming an ESP8266.
 There is a guide here for setting up Mosquitto which seems to work well: https://www.home-assistant.io/addons/mosquitto/
@@ -22,7 +33,7 @@ Currently this is the version being actively developed.  When more D1 Mini's and
 - Message "3" - Sets calibration to set laser 1 minimum range.  This is the shortes range it will consider as a trigger.  By default 0.
 - Message "4" - Sets calibration to set laser 2 minimum range.  This is the shortes range it will consider as a trigger.  By default 0.
 
-Use these modes to set up your tripwire so it's only detecting motion at the exact points you want.  Useful for using to monitor small spaces like a mail slot while avoiding the bog that likes to dance around under it and bark at the postman.
+Use these modes to set up your tripwire so it's only detecting motion at the exact points you want.  Useful for using to monitor small spaces like a mail slot while avoiding the dog that likes to dance around under it and bark at the postman.
 
 Ignoring this ability means it functions the same as version 0.4 (over the full range of a few millimetres to 2 metres).
 
