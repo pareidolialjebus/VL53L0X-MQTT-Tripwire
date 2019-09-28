@@ -24,13 +24,15 @@ Currently this is the version being actively developed.  When more D1 Mini's and
 
 Use these modes to set up your tripwire so it's only detecting motion at the exact points you want.  Useful for using to monitor small spaces like a mail slot while avoiding the bog that likes to dance around under it and bark at the postman.
 
+Ignoring this ability means it functions the same as version 0.4 (over the full range of a few millimetres to 2 metres).
+
 ## To do
 
 - Add circuit diagram for dual version (it's literally another unit on the i2c bus and direct connections to the reset
 pins on the laser module that allow them to be programmed with i2c assresses.  Id's on these chips are volatile and
 lost with every reboot.
 
-- Range calibration to be saved to flash to allow reboot.  Calibration to be set by MQTT message if enabled at compile time.
+- Range calibration to be saved to flash to allow reboot without losing settings.
 
 ## Issues
 
