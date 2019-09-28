@@ -39,11 +39,10 @@ Ignoring this ability means it functions the same as version 0.4 (over the full 
 
 ## To do
 
-- Add circuit diagram for dual version (it's literally another unit on the i2c bus and direct connections to the reset
-pins on the laser module that allow them to be programmed with i2c assresses.  Id's on these chips are volatile and
-lost with every reboot.
-
 - Range calibration to be saved to flash to allow reboot without losing settings.
+
+## Circuit
+A copy of the original Adafruit fritzing sketch with an embarrassing yet functional circuit diagram of the dual version are available here: https://i.imgur.com/GOsAUgk.jpg
 
 ## Issues
 
