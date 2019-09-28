@@ -12,18 +12,25 @@ There is no special reason for using Mosquitto, it's just the one I am running a
 There are two versions of the sketch, for circuits that connect either one or two VL53L0x units.  The version with two
 lasers has the additional benefit of being able to report a direction of travel when both are triggered.
 
+## Dual Version
+
+Currently this is the version being actively developed.  When more D1 Mini's and more V53L0x's arrive in the post, I'll get back to work on the single beam version.  MQTT messages send to the unit have the effect of putting it into range calibration.
+
+- Message "0" - Tells the unit to exit range calibration.  Any changes are set.
+- Message "1" - Sets calibration to set laser 1 max.  This is the longest range it will consider as a trigger.  By default 2000 (or 2 metres).
+- Message "2" - Sets calibration to set laser 2 max.  This is the longest range it will consider as a trigger.  By default 2000 (or 2 metres).
+- Message "3" - Sets calibration to set laser 1 minimum range.  This is the shortes range it will consider as a trigger.  By default 0.
+- Message "4" - Sets calibration to set laser 2 minimum range.  This is the shortes range it will consider as a trigger.  By default 0.
+
+Use these modes to set up your tripwire so it's only detecting motion at the exact points you want.  Useful for using to monitor small spaces like a mail slot while avoiding the bog that likes to dance around under it and bark at the postman.
+
 ## To do
 
 - Add circuit diagram for dual version (it's literally another unit on the i2c bus and direct connections to the reset
 pins on the laser module that allow them to be programmed with i2c assresses.  Id's on these chips are volatile and
 lost with every reboot.
 
-## Future versions
-
-- The next version of the sketch / circuit(s) will support calibration hardware that will allow users to interactively
-set the distance to monitor to allow for specific distance ranges (such as the 100 millimeters covering a letterbox).
-
-- Calibration to be saved to flash to allow reboot.  Calibration to be set by MQTT message if enabled at compile time.
+- Range calibration to be saved to flash to allow reboot.  Calibration to be set by MQTT message if enabled at compile time.
 
 ## Issues
 
@@ -50,7 +57,8 @@ and probably will arrive quicker.  I'm generally broke so these all developed wi
 
 ### Changelog
 
-0.4 Update to secrets.h to move port from main sketch
-0.3 Moved secrets out of sketch (mqtt user / password etc)
-0.2 Removed legacy led on/off from original example sketch 
-0.1 First upload
+- 0.5 Added MQTT control to set range.
+- 0.4 Update to secrets.h to move port from main sketch
+- 0.3 Moved secrets out of sketch (mqtt user / password etc)
+- 0.2 Removed legacy led on/off from original example sketch 
+- 0.1 First upload
