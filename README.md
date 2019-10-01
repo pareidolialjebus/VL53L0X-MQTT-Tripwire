@@ -32,7 +32,7 @@ Currently this is the version being actively developed.  When more D1 Mini's and
 - Message "2" - Sets calibration to set laser 2 max.  This is the longest range it will consider as a trigger.  By default 2000 (or 2 metres).
 - Message "3" - Sets calibration to set laser 1 minimum range.  This is the shortes range it will consider as a trigger.  By default 0.
 - Message "4" - Sets calibration to set laser 2 minimum range.  This is the shortes range it will consider as a trigger.  By default 0.
-- Message "9" - Writes calibration to flash, allowing power to be cycled while retailing settings.
+- Message "9" - Writes calibration to flash, allowing power to be cycled while retaining settings.
 
 Use these modes to set up your tripwire so it's only detecting motion at the exact points you want.  Useful for using to monitor small spaces like a mail slot while avoiding the dog that likes to dance around under it and bark at the postman.
 
