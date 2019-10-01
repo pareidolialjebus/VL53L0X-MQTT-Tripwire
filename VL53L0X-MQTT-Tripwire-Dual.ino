@@ -1,4 +1,4 @@
-// V0.5
+// V0.6
 // Dual VL53L0x Time of Flight Laser Rangefinders as directional tripwire
 // Reports "on1" and "on2" as MQTT payload when beams broken by a person
 // or objects travelling as long as they break both beams sequentially.
@@ -21,6 +21,7 @@
 #include "Adafruit_VL53L0X.h"
 #include <ESP8266WiFi.h>
 #include <PubSubClient.h>
+#include <EEPROM.h>
 
 #include "secrets.h" // <------- dont forget to update the secrets file!
 
@@ -40,6 +41,20 @@ PubSubClient client(espClient);
 long lastMsg = 0;
 char msg[50];
 int value = 0;
+
+
+// Flash writing stuff
+byte promTest;
+
+byte Bfour;
+byte Bthree;
+byte Btwo;
+byte Bone;
+
+long Lfour;
+long Lthree;
+long Ltwo;
+long Lone;
 
 // Direction timers
 // --------------------------------------------------------------------------------
@@ -139,7 +154,7 @@ void read_dual_sensors() {
   {
     // L0x1 triggered?
     if (measure1.RangeStatus != 4) {
-      if ((measure1.RangeMilliMeter < v1_max) && (measure1.RangeMilliMeter > v1_min)){
+      if ((measure1.RangeMilliMeter < v1_max) && (measure1.RangeMilliMeter > v1_min)) {
         Timer1 = 10;
       }
     }
@@ -150,7 +165,7 @@ void read_dual_sensors() {
 
     // L0x2 triggered?
     if (measure2.RangeStatus != 4) {
-      if ((measure2.RangeMilliMeter < v2_max) && (measure2.RangeMilliMeter > v2_min)){
+      if ((measure2.RangeMilliMeter < v2_max) && (measure2.RangeMilliMeter > v2_min)) {
         Timer2 = 10;
       }
     }
@@ -239,22 +254,77 @@ void callback(char* topic, byte* payload, unsigned int length) {
     calibration_mode = 4;
     Serial.println("Set Laser 2 Min Range");
   }
+
   if ((char)payload[0] == '0') {
     calibration_mode = 0;
-    
+
     Serial.println("Laser ranges set");
-    
+
     Serial.print("L1 Max: ");
     Serial.print(v1_max);
     Serial.print(" Min: ");
     Serial.print(v1_min);
-    
+
     Serial.print("  L2 Max: ");
     Serial.print(v2_max);
     Serial.print(" Min: ");
     Serial.println(v2_min);
+
   }
 
+  // Write values to EEPROM (Flash really, there is no EEPROM in an ESP8266!)
+  if ((char)payload[0] == '9') {
+
+    Serial.print("Writing settings to Flash..");
+
+    Bfour = (v1_max & 0xFF);
+    Bthree = ((v1_max >> 8) & 0xFF);
+    Btwo = ((v1_max >> 16) & 0xFF);
+    Bone = ((v1_max >> 24) & 0xFF);
+    EEPROM.write(3, Bfour);
+    EEPROM.write(2, Bthree);
+    EEPROM.write(1, Btwo);
+    EEPROM.write(0, Bone);
+
+    Serial.print(".");
+
+    Bfour = (v1_min & 0xFF);
+    Bthree = ((v1_min >> 8) & 0xFF);
+    Btwo = ((v1_min >> 16) & 0xFF);
+    Bone = ((v1_min >> 24) & 0xFF);
+    EEPROM.write(7, Bfour);
+    EEPROM.write(6, Bthree);
+    EEPROM.write(5, Btwo);
+    EEPROM.write(4, Bone);
+
+    Serial.print(".");
+
+    Bfour = (v2_max & 0xFF);
+    Bthree = ((v2_max >> 8) & 0xFF);
+    Btwo = ((v2_max >> 16) & 0xFF);
+    Bone = ((v2_max >> 24) & 0xFF);
+    EEPROM.write(11, Bfour);
+    EEPROM.write(10, Bthree);
+    EEPROM.write(9, Btwo);
+    EEPROM.write(8, Bone);
+
+    Serial.print(".");
+
+    Bfour = (v2_min & 0xFF);
+    Bthree = ((v2_min >> 8) & 0xFF);
+    Btwo = ((v2_min >> 16) & 0xFF);
+    Bone = ((v2_min >> 24) & 0xFF);
+    EEPROM.write(15, Bfour);
+    EEPROM.write(14, Bthree);
+    EEPROM.write(13, Btwo);
+    EEPROM.write(12, Bone);
+
+    Serial.print(".");
+
+    EEPROM.commit();
+
+    Serial.println(".done!");
+  }
 }
 
 // connect / reconnect MQTT broker
@@ -277,12 +347,138 @@ void reconnect() {
   }
 }
 
+
+// Main Setup
+// --------------------------------------------------------------------------------
 void setup() {
 
   Serial.begin(115200);
   // wait until serial port opens for native USB devices
   while (! Serial) {
     delay(1);
+  }
+
+  // Start EEPROM and reserve space
+  // Address 0 -3 = l1 max
+  // Address 4 -7 = l1 min
+  // Address 8 -11 = l2 max
+  // Address 12 -15 = l2 min
+  // Address 16 = 42 if routine run before
+  EEPROM.begin(64);
+
+  // test if values stored before?
+  promTest = EEPROM.read(16);
+
+  if (promTest == 42) {
+
+    // yes! read the saved data
+
+    Serial.print("Reading laser ranges from flash.");
+    
+    Lfour = EEPROM.read(3);
+    Lthree = EEPROM.read(2);
+    Ltwo = EEPROM.read(1);
+    Lone = EEPROM.read(0);
+    v1_max = ((Lfour << 0) & 0xFF) + ((Lthree << 8) & 0xFFFF) + ((Ltwo << 16) & 0xFFFFFF) + ((Lone << 24) & 0xFFFFFFFF);
+
+    Serial.print(".");
+
+    Lfour = EEPROM.read(7);
+    Lthree = EEPROM.read(6);
+    Ltwo = EEPROM.read(5);
+    Lone = EEPROM.read(4);
+    v1_min = ((Lfour << 0) & 0xFF) + ((Lthree << 8) & 0xFFFF) + ((Ltwo << 16) & 0xFFFFFF) + ((Lone << 24) & 0xFFFFFFFF);
+
+    Serial.print(".");
+
+    Lfour = EEPROM.read(11);
+    Lthree = EEPROM.read(10);
+    Ltwo = EEPROM.read(9);
+    Lone = EEPROM.read(8);
+    v2_max = ((Lfour << 0) & 0xFF) + ((Lthree << 8) & 0xFFFF) + ((Ltwo << 16) & 0xFFFFFF) + ((Lone << 24) & 0xFFFFFFFF);
+
+    Serial.print(".");
+
+    Lfour = EEPROM.read(15);
+    Lthree = EEPROM.read(14);
+    Ltwo = EEPROM.read(13);
+    Lone = EEPROM.read(12);
+    v2_min = ((Lfour << 0) & 0xFF) + ((Lthree << 8) & 0xFFFF) + ((Ltwo << 16) & 0xFFFFFF) + ((Lone << 24) & 0xFFFFFFFF);
+    
+    Serial.print(".done!");
+
+    Serial.print("L1 Max: ");
+    Serial.print(v1_max);
+    Serial.print(" Min: ");
+    Serial.print(v1_min);
+
+    Serial.print("  L2 Max: ");
+    Serial.print(v2_max);
+    Serial.print(" Min: ");
+    Serial.println(v2_min);
+    
+  } else {
+
+    Serial.println("First run, writing preset ranges to flash.");
+
+    // no, write full range data
+    v1_max = 2000;
+    byte Bfour = (v1_max & 0xFF);
+    byte Bthree = ((v1_max >> 8) & 0xFF);
+    byte Btwo = ((v1_max >> 16) & 0xFF);
+    byte Bone = ((v1_max >> 24) & 0xFF);
+    EEPROM.write(3, Bfour);
+    EEPROM.write(2, Bthree);
+    EEPROM.write(1, Btwo);
+    EEPROM.write(0, Bone);
+
+    v1_min = 0;
+    Bfour = (v1_min & 0xFF);
+    Bthree = ((v1_min >> 8) & 0xFF);
+    Btwo = ((v1_min >> 16) & 0xFF);
+    Bone = ((v1_min >> 24) & 0xFF);
+    EEPROM.write(7, Bfour);
+    EEPROM.write(6, Bthree);
+    EEPROM.write(5, Btwo);
+    EEPROM.write(4, Bone);
+
+    v2_max = 2000;
+    Bfour = (v2_max & 0xFF);
+    Bthree = ((v2_max >> 8) & 0xFF);
+    Btwo = ((v2_max >> 16) & 0xFF);
+    Bone = ((v2_max >> 24) & 0xFF);
+    EEPROM.write(11, Bfour);
+    EEPROM.write(10, Bthree);
+    EEPROM.write(9, Btwo);
+    EEPROM.write(8, Bone);
+
+    v2_min = 0;
+    Bfour = (v2_min & 0xFF);
+    Bthree = ((v2_min >> 8) & 0xFF);
+    Btwo = ((v2_min >> 16) & 0xFF);
+    Bone = ((v2_min >> 24) & 0xFF);
+    EEPROM.write(15, Bfour);
+    EEPROM.write(14, Bthree);
+    EEPROM.write(13, Btwo);
+    EEPROM.write(12, Bone);
+
+    // add 42 to address 16, this should only be run once
+    EEPROM.write(16, 42);
+
+    EEPROM.commit();
+
+    Serial.println(".done!");
+
+    Serial.print("L1 Max: ");
+    Serial.print(v1_max);
+    Serial.print(" Min: ");
+    Serial.print(v1_min);
+
+    Serial.print("  L2 Max: ");
+    Serial.print(v2_max);
+    Serial.print(" Min: ");
+    Serial.println(v2_min);
+
   }
 
   // start wifi
@@ -307,6 +503,8 @@ void setup() {
   setID();
 }
 
+// Program Loop
+// --------------------------------------------------------------------------------
 void loop() {
 
   if (!client.connected()) {
