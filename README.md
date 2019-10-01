@@ -1,4 +1,4 @@
-# VL53L0X-MQTT-Tripwire V0.5
+# VL53L0X-MQTT-Tripwire V0.6
 Arduino sketches used to create a single or dual tripwire for use with IoT software
 
 ## Dependancies
@@ -32,14 +32,11 @@ Currently this is the version being actively developed.  When more D1 Mini's and
 - Message "2" - Sets calibration to set laser 2 max.  This is the longest range it will consider as a trigger.  By default 2000 (or 2 metres).
 - Message "3" - Sets calibration to set laser 1 minimum range.  This is the shortes range it will consider as a trigger.  By default 0.
 - Message "4" - Sets calibration to set laser 2 minimum range.  This is the shortes range it will consider as a trigger.  By default 0.
+- Message "9" - Writes calibration to flash, allowing power to be cycled while retailing settings.
 
 Use these modes to set up your tripwire so it's only detecting motion at the exact points you want.  Useful for using to monitor small spaces like a mail slot while avoiding the dog that likes to dance around under it and bark at the postman.
 
 Ignoring this ability means it functions the same as version 0.4 (over the full range of a few millimetres to 2 metres).
-
-## To do
-
-- Range calibration to be saved to flash to allow reboot without losing settings.
 
 ## Circuit
 A copy of the original Adafruit fritzing sketch with an embarrassing yet functional circuit diagram of the dual version are available here: https://i.imgur.com/GOsAUgk.jpg
@@ -69,6 +66,7 @@ and probably will arrive quicker.  I'm generally broke so these all developed wi
 
 ### Changelog
 
+- 0.6 Added saving range settings to flash
 - 0.5 Added MQTT control to set range.
 - 0.4 Update to secrets.h to move port from main sketch
 - 0.3 Moved secrets out of sketch (mqtt user / password etc)
